@@ -1,5 +1,7 @@
 package br.com.appList.listnest.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,6 +32,7 @@ public class ItemLista {
 	//Chave estrangeira da tabela produto e da tabela lista
 	@ManyToOne
 	@JoinColumn(name = "tbl_produto_id_produto")
+	@JsonIgnoreProperties("itens")
 	private Produto produto;//Referenciando a model Produto
 	
 	@ManyToOne

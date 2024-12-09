@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import br.com.appList.listnest.model.Produto;
 import br.com.appList.listnest.service.IProdutoService;
 
 @RestController
+@CrossOrigin("*")
 public class ProdutoController {
 	
 	//O responseEntity é uma classe do spring que representa  toda  a resposta HTTP, incluindo o corpo da resposta o status e os cabeçalhos ele é util quando se precisar personalizar status http ou adicionar cabeçalhos especificos a resposta

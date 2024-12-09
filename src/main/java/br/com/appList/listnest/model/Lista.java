@@ -3,6 +3,8 @@ package br.com.appList.listnest.model;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,6 +29,7 @@ public class Lista {
 	@Column(name = "nome_mercado", length = 50)
 	private String nomeMercado;
 	
+	
 	public List<ItemLista> getItens() {
 		return itens;
 	}
@@ -43,6 +46,7 @@ public class Lista {
 	
 	// Na minha lista preciso declara que terei um conjunto de itens por isso temos o list
 	@OneToMany(mappedBy = "lista", cascade = CascadeType.ALL) //De lista para itens e one to many, agora a chave estrangeira que referencia a lista é "lista" ela estar em ItemLista
+	@JsonIgnoreProperties("lista")
 	private List<ItemLista> itens;//O cascade seguinifica que quando eu removo uma lista os respectivos itens dela também é removido
 	
 	//Getter e Setter
