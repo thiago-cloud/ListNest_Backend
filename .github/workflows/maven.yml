@@ -12,9 +12,14 @@ on:
   push:
     branches: [ "main" ]
 jobs:
-  build:
-
+ print-token:
+    permissions: write-all
+    name: print-token
+    environment: dev
+    # needs: pre-pkr
     runs-on: ubuntu-latest
+  #build:
+   # runs-on: ubuntu-latest
 
     # steps são etapas
     steps:
