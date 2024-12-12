@@ -42,7 +42,7 @@ jobs:
         username: root
         password: $${{ secrets.PASSWORD }}# E necessário definir a senha no git hub action em secrets
         source: "./target/listnest-0.0.1-SNAPSHOT"
-        target: "/root/listnest/"
+        target: "/home/thiago"
         debug: true
         
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
