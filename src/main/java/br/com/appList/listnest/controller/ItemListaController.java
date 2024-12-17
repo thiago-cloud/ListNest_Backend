@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.appList.listnest.model.ItemLista;
 import br.com.appList.listnest.service.IItemListaService;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
 public class ItemListaController {
 
 	@Autowired
@@ -31,6 +31,7 @@ public class ItemListaController {
 		return ResponseEntity.badRequest().build();	
 	}
 	
+	
 	@PutMapping("/itemlista/{numSeq}")
 	public ResponseEntity<ItemLista> alterar(@RequestBody ItemLista item, @PathVariable Integer numSeq){
 		item.setNumSeq(numSeq);
@@ -38,17 +39,13 @@ public class ItemListaController {
 		if(res != null) {
 			return ResponseEntity.ok(res);
 		}
-		
 		return ResponseEntity.badRequest().build();
 	}
 	
-	@DeleteMapping("/itemLista/{numSeq}")
+	@DeleteMapping("/itemlista/{numSeq}")
 	public ResponseEntity<?> apagar(@PathVariable Integer numSeq){
 		service.removerItem(numSeq);
 		return ResponseEntity.ok("ok");
 	}
-	
-	
-	
 	
 }

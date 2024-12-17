@@ -17,7 +17,7 @@ import br.com.appList.listnest.model.Lista;
 import br.com.appList.listnest.service.IListaService;
 
 @RestController
-@CrossOrigin("*")//Aceite requisições de outros servidores
+//@CrossOrigin("*")//Aceite requisições de outros servidores
 public class ListarController {
 	
 	@Autowired

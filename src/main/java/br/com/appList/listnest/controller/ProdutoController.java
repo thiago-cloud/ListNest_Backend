@@ -16,7 +16,7 @@ import br.com.appList.listnest.model.Produto;
 import br.com.appList.listnest.service.IProdutoService;
 
 @RestController
-@CrossOrigin("*")
+//@CrossOrigin("*")
 public class ProdutoController {
 	
 	//O responseEntity é uma classe do spring que representa  toda  a resposta HTTP, incluindo o corpo da resposta o status e os cabeçalhos ele é util quando se precisar personalizar status http ou adicionar cabeçalhos especificos a resposta
