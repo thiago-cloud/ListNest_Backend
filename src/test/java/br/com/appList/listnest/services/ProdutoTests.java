@@ -1,108 +1,101 @@
 package br.com.appList.listnest.services;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import br.com.appList.listnest.model.Produto;
+import br.com.appList.listnest.repo.ProdutoRepo;
+import br.com.appList.listnest.service.ProdutoServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import br.com.appList.listnest.model.Produto;
-import br.com.appList.listnest.repo.ProdutoRepo;
-import br.com.appList.listnest.service.IProdutoService;
-import br.com.appList.listnest.service.ProdutoServiceImpl;
-
 @SpringBootTest
-@ActiveProfiles("test")//Utilizando o banco de dados teste h2
+@ActiveProfiles("test")
 public class ProdutoTests {
-	
-	
-	//Mock e uma simulação de algo ou seja uma coisa fake
-	
-	@InjectMocks//Vai chamar o repositorio mockado
-	private ProdutoServiceImpl service;
-	
-	@Mock//Simulação do repositorio ProdutoRepo
-	private ProdutoRepo repo;
-	
-	private Integer existingId = 1;
-	private Integer nonExistingId = 100;
-	private String keyword = "bolacha";
-	private Produto newProduct;
-	private Produto createdProduct;
-	private ArrayList<Produto> listaDeVariosProdutos;
 
-	
-	//O BeforeEach serve para colocar algo antes da execução dos testes.
+    @InjectMocks
+    private ProdutoServiceImpl service;
+
+    @Mock
+    private ProdutoRepo repo;
+
+    private Produto newProduct;
+    private Produto createdProduct;
+    private List<Produto> listaDeProdutos;
+    private final Integer existingId = 1;
+    private final Integer nonExistingId = 100;
+    private final String keyword = "bolacha";
+
 	@BeforeEach
-	public void setup() throws Exception {
-		
+	void setup() {
+		// O id será gerado automaticamente pelo JPA
 		newProduct = new Produto();
 		newProduct.setNome("Bolacha");
 		
 		createdProduct = new Produto();
-		createdProduct.setId(1);
+		createdProduct.setId(1); // Aqui, você pode definir manualmente o id para o produto já criado.
 		createdProduct.setNome("Bolacha");
-		
-		listaDeVariosProdutos = new ArrayList<Produto>();
-		Produto p1, p2;
-		p1 = new Produto();
+	
+		Produto p1 = new Produto();
 		p1.setId(2);
 		p1.setNome("Bolacha recheada");
-		p2 = new Produto();
+	
+		Produto p2 = new Produto();
 		p2.setId(3);
-		p2.setNome("Bolacha agua e sal");
-		
-		listaDeVariosProdutos.add(p1);
-		listaDeVariosProdutos.add(p2);
-		
-		Mockito.when(repo.save(newProduct)).thenReturn(createdProduct);
-		Mockito.when(repo.findById(existingId)).thenReturn(Optional.of(new Produto()));
-		Mockito.when(repo.findById(nonExistingId)).thenReturn(Optional.of(null));
-		Mockito.when(repo.findAllByNomeContaining("Biscoito")).thenReturn(new ArrayList<Produto>());
-		Mockito.when(repo.findAllByNomeContaining(keyword)).thenReturn(listaDeVariosProdutos);
-		
+		p2.setNome("Bolacha água e sal");
 	
+		listaDeProdutos = List.of(p1, p2);
+	
+		when(repo.save(newProduct)).thenReturn(createdProduct);
+		when(repo.findById(existingId)).thenReturn(Optional.of(createdProduct));
+		when(repo.findById(nonExistingId)).thenReturn(Optional.empty());
+		when(repo.findAllByNomeContaining(keyword)).thenReturn(listaDeProdutos);
+		when(repo.findAllByNomeContaining("Biscoito")).thenReturn(new ArrayList<>());
 	}
-	
-	
-	@Test
-	public void deveriaCadastrarProduto() {
-		assertEquals(service.cadastrarProduto(newProduct), createdProduct);
-	}
-	
-	@Test
-	public void deveriaRetornarPeloId() {
-		
-	}
-	
-	@Test
-	public void deveriaNaoEncontrarId() {	
-	
-	}
-	
-	@Test
-	public void deveriaRetornarListaComPalavraChave() {
 
-		
-	}	
-	
-	@Test
-	public void deveriaRetornarListaVazia() {
-		
-	}
-	
-	
+    @Test
+    void deveriaCadastrarProdutoComSucesso() {
+        Produto result = service.cadastrarProduto(newProduct);
+        assertNotNull(result);
+        assertEquals(createdProduct.getId(), result.getId());
+        assertEquals("Bolacha", result.getNome());
+    }
 
-	
-	
+    @Test
+    void deveriaRetornarProdutoPorIdExistente() {
+        Produto produto = service.buscarPorId(existingId);
+        assertNotNull(produto);
+    }
+
+    @Test
+    void deveriaRetornarNullParaIdInexistente() {
+        Produto produto = service.buscarPorId(nonExistingId);
+        assertNull(produto);
+    }
+
+    @Test
+    void deveriaRetornarListaDeProdutosComPalavraChave() {
+        List<Produto> produtos = service.buscarPorPalavraChave(keyword);
+        assertAll(
+            () -> assertEquals(2, produtos.size()),
+            () -> assertEquals("Bolacha recheada", produtos.get(0).getNome()),
+            () -> assertEquals("Bolacha água e sal", produtos.get(1).getNome())
+        );
+    }
+
+    @Test
+    void deveriaRetornarListaVaziaQuandoNaoEncontrarProdutos() {
+        List<Produto> produtos = service.buscarPorPalavraChave("Biscoito");
+        assertTrue(produtos.isEmpty());
+    }
 }
+
+
